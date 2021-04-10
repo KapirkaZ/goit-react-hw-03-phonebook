@@ -39,12 +39,20 @@
 }
 
 .TaskList_button {
-  margin-right: 20px;
-  margin-left: 20px;
-  background-color: rgb(219, 82, 82);
-  border-radius: 15px;
+  width: 25px;
+  height: 25px;
+  background-color: red;
+  border: 1px solid black;
+  border-radius: 50%;
 }
 
 .buttonstyle {
   margin-left: auto;
+}
+
+.TaskList_button::before {
+  content: "x";
+  color: #fff;
+  font-weight: 300;
+  font-family: Arial, sans-serif;
 }

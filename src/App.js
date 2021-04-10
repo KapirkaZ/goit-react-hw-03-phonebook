@@ -8,12 +8,31 @@ import Container from "./components/Container/Container";
 export default class App extends Component {
   state = {
     contacts: [
-      { id: "id-1", name: "Rosie Simpson", number: "459-12-56" },
-      { id: "id-2", name: "Hermione Kline", number: "443-89-12" },
-      { id: "id-3", name: "Eden Clements", number: "645-17-79" },
-      { id: "id-4", name: "Annie Copeland", number: "227-91-26" },
+      // { id: "id-1", name: "Rosie Simpson", number: "459-12-56" },
+      // { id: "id-2", name: "Hermione Kline", number: "443-89-12" },
+      // { id: "id-3", name: "Eden Clements", number: "645-17-79" },
+      // { id: "id-4", name: "Annie Copeland", number: "227-91-26" },
     ],
     filter: "",
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem("contacts", JSON.stringify(this.state.contacts));
+    }
+  }
+
+  componentDidMount() {
+    const contacts = localStorage.getItem("contacts");
+    const parsedContacts = JSON.parse(contacts);
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts });
+    }
+  }
+
+  gatheredData = (data) => {
+    const newData = data;
+    return newData;
   };
 
   addContact = (task) => {
@@ -37,12 +56,19 @@ export default class App extends Component {
     }
   };
 
+  deleteContact = (nameId) => {
+    this.setState((prevState) => ({
+      contacts: prevState.contacts.filter((name) => name.id !== nameId),
+    }));
+  };
+
   changeFilter = (filter) => {
     this.setState({ filter });
   };
 
-  getVisibleContacts = () => {
-    const { contacts, filter } = this.state;
+  getFilteredNames = () => {
+    const { filter, contacts } = this.state;
+    const normalizeFilter = filter.toLowerCase();
 
     return contacts.filter((contacts) =>
       contacts.name.toLowerCase().includes(filter.toLowerCase())
@@ -59,8 +85,7 @@ export default class App extends Component {
 
   render() {
     const { filter } = this.state;
-
-    const visibleContacts = this.getVisibleContacts();
+    const filteredNames = this.getFilteredNames();
 
     return (
       <Container>
@@ -68,15 +93,13 @@ export default class App extends Component {
 
         <ContactForm onAddContact={this.addContact} />
         <h1>Contacts</h1>
-        {visibleContacts.length > 0 && (
-          <Filter value={filter} onChangeFilter={this.changeFilter} />
-        )}
-        {visibleContacts.length > 0 && (
-          <ContactList
-            contacts={visibleContacts}
-            onRemoveContact={this.removeContact}
-          />
-        )}
+
+        <Filter value={filter} onChangeFilter={this.changeFilter} />
+
+        <ContactList
+          contacts={filteredNames}
+          onRemoveContact={this.removeContact}
+        />
       </Container>
     );
   }
