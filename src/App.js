@@ -68,7 +68,7 @@ export default class App extends Component {
 
   getFilteredNames = () => {
     const { filter, contacts } = this.state;
-    const normalizeFilter = filter.toLowerCase();
+    // const normalizeFilter = filter.toLowerCase();
 
     return contacts.filter((contacts) =>
       contacts.name.toLowerCase().includes(filter.toLowerCase())
